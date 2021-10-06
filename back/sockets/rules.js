@@ -2,7 +2,7 @@ module.exports.modelGame = () => {
     return {
         playerNb: 0,
         isStart: false,
-        maxScore: 1_000,
+        maxScore: 5_000,
         dicePoints: [100, 0, 0, 0, 50, 0],
         playersName: [],
         playersID: [],

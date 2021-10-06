@@ -37,13 +37,14 @@ const randomTurn = (maxPlayer) => {
 }
 
 module.exports.listen = function (server) {
-    const io = socketio(server);
+    const io = socketio(server, {
+        cors: {
+            origin: "*"
+        }
+    });
 
     io.on('connection', (socket) => {
         console.log(`Connecté au client ${socket.id}`)
-        socket.on('disconnect', function () {
-            console.log(`Déconnecté du client ${socket.id}`);
-        })
 
         socket.on('room', function (data) {
             //check if the maximum number of rooms
@@ -66,7 +67,7 @@ module.exports.listen = function (server) {
                 }
                 socket.broadcast.emit(`room_${data.room}`, `${data.username} à rejoint le salon`)
                 // update party of room
-                io.emit(`game_${data.room}`, JSON.parse(localStorage.getItem(`game_${data.room}`)));
+                io.to(socket.id).emit(`game_${data.room}`, JSON.parse(localStorage.getItem(`game_${data.room}`)));
 
                 socket.on('disconnect', function () {
                     // reset the stats if the client disconnects and passes his turn
@@ -78,6 +79,8 @@ module.exports.listen = function (server) {
                         partyData.playersScore[indexOfId] = 0
                         if (partyData.playerTurn === indexOfId + 1) {
                             partyData.playerTurn = newTurn(partyData) + 1
+                            partyData.points = 0
+                            partyData.diceRemaining = partyData.nbOfDices
                         }
                         let playersActive = 0
                         io.emit(`room_${data.room}`, `${data.username} à quitté la partie !`)
@@ -91,6 +94,7 @@ module.exports.listen = function (server) {
                                     io.emit(`room_${data.room}`, `${partyData.playersName[partyData.playerTurn - 1]} à gagné par forfait !`)
                                     partyData.lastWinner = partyData.playersName[partyData.playerTurn - 1]
                                     partyData.playerTurn = -1
+                                    partyData.win = true
                                     let time = partyData.lose ? 3100 : 0
 
                                     setTimeout(() => {
@@ -113,7 +117,7 @@ module.exports.listen = function (server) {
                         // update party stats for clients
                         io.emit(`game_${data.room}`, partyData);
                     } else {
-                        io.emit(`room_${data.room}`, `${data.username} à quitté le salon`)
+                        socket.broadcast.emit(`room_${data.room}`, `${data.username} à quitté le salon`)
                     }
                 })
             }
@@ -166,8 +170,6 @@ module.exports.listen = function (server) {
                     } else {
                         io.to(socket.id).emit(`room_${room}`, `${partyData.playersName[playerNumber]} est déjà le joueur 0${playerNumber + 1}`);
                     }
-                } else {
-                    io.to(socket.id).emit(`room_${room}`, 'Vous avez déja pris place');
                 }
             }
         });
@@ -206,10 +208,12 @@ module.exports.listen = function (server) {
                 }, 3000);
             } else if (updatedPartyData.win) {
                 updatedPartyData.diceRemaining = 0
-                updatedPartyData.playersScore[updatedPartyData.playerTurn -1] += partyData.points
+                updatedPartyData.playersScore[updatedPartyData.playerTurn - 1] += partyData.points
                 updatedPartyData.points = 0
+                updatedPartyData.playerTurn = -1
                 localStorage.setItem(`game_${room}`, JSON.stringify(updatedPartyData))
                 socket.broadcast.emit(`room_${room}`, `${updatedPartyData.playersName[updatedPartyData.playerTurn - 1]} à gagné la partie !!`);
+                io.to(socket.id).emit(`room_${room}`, 'Vous avez gagné la partie !');
                 io.emit(`game_${room}`, updatedPartyData);
                 setTimeout(() => {
                     let newParty = gameStat.modelGame()
