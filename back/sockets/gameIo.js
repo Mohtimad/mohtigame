@@ -49,7 +49,8 @@ const getResult = (dices, dicePoints) => {
 const checkIfLost = (partyData) => {
     if (partyData.diceRemaining != 0 &&
         partyData.turnPoints == 0 ||
-        partyData.points + partyData.playersScore[partyData.playerTurn - 1] > partyData.maxScore) {
+        partyData.points + partyData.playersScore[partyData.playerTurn - 1] > partyData.maxScore ||
+        partyData.maxScore - partyData.points === 0) {
         return true;
     } else {
         return false
@@ -81,7 +82,9 @@ exports.turnInit = (partyData) => {
         partyData.points += result.turnPoints
         partyData.diceRemaining = result.diceRemaining
         partyData.lose = checkIfLost(partyData)
-        partyData.win = checkIfWin(partyData)
+        partyData.win = !partyData.lose
+            ? checkIfWin(partyData)
+            : false
         partyData.diceRemaining = partyData.diceRemaining == 0 && !partyData.lose
             ? partyData.nbOfDices
             : partyData.diceRemaining

@@ -5,13 +5,18 @@
       v-if="
         (this.partyData.isStart &&
           !(
-            this.partyData.diceRemaining === 5 && this.partyData.points === 0
+            this.partyData.diceRemaining === partyData.nbOfDices &&
+            this.partyData.points === 0
           )) ||
         this.partyData.lose
       "
     >
-      <div class="dice" v-for="dice in this.partyData.dices" :key="{ dice }">
-        <img :src="require(`@/assets/dices/${dice}.png`)" />
+      <div
+        v-for="(dice, index) in this.partyData.dices"
+        :class="`dice dice--${this.animationDices ? index + 1 : 'not'}`"
+        :key="{ dice }"
+      >
+        <img :src="require(`@/assets/dices/${dice}.png`)" :alt="`Dé face ${i}`" />
       </div>
     </div>
     <ul class="player-list">
@@ -23,12 +28,23 @@
       >
         <button
           :value="player"
-          v-if="!this.partyData.playersName[player - 1]"
+          v-if="
+            (!this.partyData.playersName[player - 1] ||
+            this.partyData.playersName[player - 1] === -10)
+          "
           v-on:click="this.$parent.addPlayer(player)"
+          :class="`buttonPlayer empty-place empty-place--${
+            partyData.isStart ? 'red' : 'green'
+          }`"
         >
-          Libre<br />J{{ player }}
+          {{ this.partyData.isStart ? "Abandon" : "Libre" }}<br />J{{ player }}
         </button>
-        <button class="used-place" v-else>
+        <button
+          :class="`buttonPlayer used-place used-place--${
+            player == partyData.playerTurn ? 'yellow' : 'blue'
+          }`"
+          v-else
+        >
           {{ this.partyData.playersName[player - 1] }}<br />
           {{ this.partyData.playersScore[player - 1] }}
         </button>
@@ -41,11 +57,12 @@
 export default {
   name: "Table",
   props: {
+    animationDices: Boolean,
     partyData: Object,
   },
   data() {
     return {
-      playerColor: 'green',
+      animation: true,
       playerPositonCSS: {
         // loop on template
         1: { bottom: "40%", right: "100%" },
@@ -60,18 +77,18 @@ export default {
         10: { top: "100%", left: "10%" },
       },
     };
-  },
-  computed: {}
+  }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "../scss/main";
 .table {
   box-shadow: #3f3f3f 3px 3px 20px, #d5d5d5 -3px -3px 20px;
   position: relative;
   margin: 50px 0 50px 0;
-  width: 75vw;
+  width: 70vw;
   max-width: 750px;
   height: 25vw;
   max-height: 250px;
@@ -88,42 +105,90 @@ export default {
     li {
       position: absolute;
       max-width: 25%;
-      button {
+      .buttonPlayer {
         overflow-wrap: break-word;
-        font-size: 0.7rem;
+        font-size: 0.5rem;
+        @include desktop-tablet-only {
+          font-size: 0.8rem;
+        }
         width: 100%;
         height: 100%;
         border: none;
         border-radius: 2px;
-        background-color: #0f9c22;
-        //box-shadow: #0f9c22 1px 1px 10px, #0f9c22 -1px -1px 10px;
         color: white;
         cursor: pointer;
+        transition-property: box-shadow background-color;
+        transition-duration: 200ms;
+        transition-timing-function: ease-in-out;
+      }
+      .empty-place {
+        &--red {
+          background-color: #9c350f;
+          box-shadow: #9c350f 1px 1px 10px, #9c350f -1px -1px 10px;
+        }
+        &--green {
+          background-color: #0f9c22;
+          box-shadow: #0f9c22 1px 1px 10px, #0f9c22 -1px -1px 10px;
+        }
       }
       .used-place {
-        background-color: #2a2896;
-        //box-shadow: #2a2896 3px 3px 10px,#2a2896 -3px -3px 10px;
-        cursor: not-allowed;
+        cursor: auto;
+        &--yellow {
+          color: black;
+          background-color: #dee81d;
+          box-shadow: #dee81d 1px 1px 10px, #dee81d -1px -1px 10px;
+        }
+        &--blue {
+          background-color: #2a2896;
+          box-shadow: #2a2896 3px 3px 10px, #2a2896 -3px -3px 10px;
+        }
       }
     }
   }
   #dices {
     position: absolute;
     width: 100%;
-    height: 30%;
+    height: 25%;
     top: 35%;
     display: flex;
     justify-content: space-evenly;
     .dice {
-      //animation-duration: 1s;
-      //animation-name: turnDices;
-      //animation-timing-function: ease-out;
-      //animation-fill-mode: forwards;
       height: 100%;
+      border-radius: 15%;
+      overflow: hidden;
+      animation-duration: 1s;
+      animation-timing-function: ease-out;
+      animation-fill-mode: forwards;
+
+      @for $i from 1 through 9 {
+        &--#{$i} {
+          opacity: 0;
+          animation-delay: #{$i * 20}0ms;
+          animation-name: turnDices;
+        }
+      }
       img {
         height: 100%;
         width: auto;
       }
+    }
+  }
+  @keyframes turnDices {
+    0% {
+      transform: rotate(0turn);
+      background-color: white;
+      opacity: 1;
+    }
+    10% {
+      background-color: white;
+    }
+    99% {
+      background-color: white;
+    }
+    100% {
+      background-color: black;
+      transform: rotate(15turn);
+      opacity: 1;
     }
   }
 }

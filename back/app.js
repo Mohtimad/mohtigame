@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const userRoutes = require('./routes/user');
 
 //authorized header
 app.use((req, res, next) => {
@@ -12,12 +11,12 @@ app.use((req, res, next) => {
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static("public"))
+app.use('/', express.static("public"))
 
-app.use('/api/auth', userRoutes);
 
-app.get('/', function (req, res) {
-  res.sendFile('index.html', { root: __dirname })
+app.get('/*',function (req, res) {
+  res.sendFile('public/index.html', { root: __dirname })
 })
+
 
 module.exports = app;

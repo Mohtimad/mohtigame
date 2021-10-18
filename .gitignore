@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/back/portfolio
+/back/mohtigame
 
 
 # local env files
