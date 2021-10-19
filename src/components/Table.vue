@@ -13,10 +13,15 @@
     >
       <div
         v-for="(dice, index) in this.partyData.dices"
-        :class="`dice dice--${this.animationDices ? index + 1 : 'not'}`"
+        :class="`dice dice--${
+          this.animationDices ? index + 1 : 'not'
+        } shadow--${!animationDices ? this.dicesShadowColor[index] : 'not'}`"
         :key="{ dice }"
       >
-        <img :src="require(`@/assets/dices/${dice}.png`)" :alt="`Dé face ${i}`" />
+        <img
+          :src="require(`@/assets/dices/${dice}.png`)"
+          :alt="`Dé face ${dice}`"
+        />
       </div>
     </div>
     <ul class="player-list">
@@ -29,8 +34,8 @@
         <button
           :value="player"
           v-if="
-            (!this.partyData.playersName[player - 1] ||
-            this.partyData.playersName[player - 1] === -10)
+            !this.partyData.playersName[player - 1] ||
+            this.partyData.playersName[player - 1] === -10
           "
           v-on:click="this.$parent.addPlayer(player)"
           :class="`buttonPlayer empty-place empty-place--${
@@ -59,6 +64,7 @@ export default {
   props: {
     animationDices: Boolean,
     partyData: Object,
+    dicesShadowColor: Array,
   },
   data() {
     return {
@@ -77,7 +83,8 @@ export default {
         10: { top: "100%", left: "10%" },
       },
     };
-  }
+  },
+  methods: {},
 };
 </script>
 
@@ -171,6 +178,33 @@ export default {
         height: 100%;
         width: auto;
       }
+    }
+  }
+
+  .shadow {
+    &--blue {
+      box-shadow: blue 2px 2px 5px, blue -2px -2px 5px, blue 2px -2px 5px,
+        blue -2px 2px 5px;
+    }
+    &--green {
+      box-shadow: greenyellow 2px 2px 5px, greenyellow -2px -2px 5px, greenyellow 2px -2px 5px,
+        greenyellow -2px 2px 5px;
+    }
+    &--yellow {
+      box-shadow: yellow 2px 2px 5px, yellow -2px -2px 5px,
+        yellow 2px -2px 5px, yellow -2px 2px 5px;
+    }
+    &--orange {
+      box-shadow: orange 2px 2px 5px, orange -2px -2px 5px,
+        orange 2px -2px 5px, orange -2px 2px 5px;
+    }
+    &--purple {
+      box-shadow: purple 2px 2px 5px, purple -2px -2px 5px,
+        purple 2px -2px 5px, purple -2px 2px 5px;
+    }
+    &--red {
+      box-shadow: red 2px 2px 5px, red -2px -2px 5px, red 2px -2px 5px,
+        red -2px 2px 5px;
     }
   }
   @keyframes turnDices {

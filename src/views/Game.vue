@@ -15,6 +15,7 @@
     <Table
       :animationDices="this.animationDices"
       :partyData="{ ...this.partyData }"
+      :dicesShadowColor="this.dicesShadowColor"
     />
     <div v-if="this.partyData.isStart && !this.animationDices" class="banner">
       <p class="banner--red" v-if="this.partyData.lose">
@@ -119,6 +120,7 @@ export default {
       id: this.$route.params.id, //this is the id from the browser
       actualPlayer: -1,
       canDisplayWin: false,
+      dicesShadowColor: [],
       partyData: {
         playerNb: 0,
         isStart: false,
@@ -156,6 +158,7 @@ export default {
   beforeMount() {
     this.socket.on(`game_${this.id}`, (partyData) => {
       this.partyData = { ...partyData };
+      this.dicesShadowColor = this.getShadowDices(this.partyData);
       if (partyData.win) {
         this.actualPlayer = -1;
         this.canDisplayWin = false;
@@ -201,6 +204,54 @@ export default {
       } else {
         this.$store.commit("incrementChat", "Vous avez déjà pris place !");
       }
+    },
+    getShadowDices: function (partyData) {
+      let dices = [];
+      for (let i = 0; i < partyData.dices.length; i++) {
+        dices.push(partyData.dices[i]);
+      }
+      let nbOfDiceFaces = [0, 0, 0, 0, 0, 0];
+      for (let i = 0; i < partyData.dices.length; i++) {
+        let faceValue = partyData.dices[i];
+        nbOfDiceFaces[faceValue - 1]++;
+      }
+      let dicesColor = new Array(partyData.dices.length);
+      while (nbOfDiceFaces.indexOf(4) != -1) {
+        const dicesWithFourFaces = nbOfDiceFaces.indexOf(4);
+        const color = dicesColor.indexOf("purple") == -1 ? "purple" : "red";
+        for (let i = 0; i < 4; i++) {
+          let dice = dices.indexOf(dicesWithFourFaces + 1);
+          dicesColor[dice] = color;
+          dices[dice] = 0;
+        }
+        nbOfDiceFaces[dicesWithFourFaces] -= 4;
+      }
+      while (nbOfDiceFaces.indexOf(3) !== -1) {
+        const dicesWithThreeFaces = nbOfDiceFaces.indexOf(3);
+        const color =
+          dicesColor.indexOf("green") === -1
+            ? "green"
+            : dicesColor.indexOf("yellow") === -1
+            ? "yellow"
+            : "orange";
+        for (let i = 0; i < 3; i++) {
+          const dice = dices.indexOf(dicesWithThreeFaces + 1);
+          dicesColor[dice] = color;
+          dices[dice] = 0;
+        }
+        nbOfDiceFaces[dicesWithThreeFaces] -= 3;
+      }
+      for (let i = 0; i < dices.length; i++) {
+        if (dices[i] === 1 || dices[i] === 5) {
+          dicesColor[i] = "blue";
+        }
+      }
+      for (let i = 0; i < dicesColor.length; i++) {
+        if (!dicesColor[i]) {
+          dicesColor[i] = "not";
+        }
+      }
+      return dicesColor;
     },
   },
 };

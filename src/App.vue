@@ -22,8 +22,8 @@ export default {
   },
   data() {
     return {
-      socket: io("localhost:3000"),
-      //socket: io(window.location.origin),
+      //socket: io("localhost:3000"),
+      socket: io(window.location.origin),
     };
   },
   methods: {
@@ -64,6 +64,7 @@ body {
 main {
   padding-bottom: 70px;
   overflow: hidden;
+  height: 100%;
 }
 
 h1 {

@@ -5,7 +5,7 @@ const gameIo = require('./sockets/gameIo');
 const party = require('./sockets/party');
 const maxRoom = 50
 const regexUsername = /^[a-zA-Z0-9.,'\-àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]{3,8}$/;
-const maxTimePerTurn = 15 //sec
+const maxTimePerTurn = 150 //sec
 
 const newTurn = (partyData) => {
     let playerNextTurn = partyData.playerTurn

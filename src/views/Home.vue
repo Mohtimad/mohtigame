@@ -6,6 +6,7 @@
       <div class="intro">
         <h2 class="h2">Jeu de dés en ligne</h2>
         <p>
+          Mothigame est une variante du jeu des 5000.<br /><br />
           De deux à dix joueurs, vous devez enchaîner les combinaisons à l'aide
           de cinq ou huit dés pour être le premier à atteindre exactement le
           nombre de point requis, ni plus, ni moins.
@@ -56,6 +57,7 @@ export default {
       height: auto;
       -webkit-animation: 10s ease-in-out 0s infinite alternate levitation;
       animation: 10s ease-in-out 0s infinite alternate levitation;
+      filter: drop-shadow( 4px 4px 10px #FFF);
       @include mobile-only {
         width: 80%;
         position: absolute;
