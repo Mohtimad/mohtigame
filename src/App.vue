@@ -42,7 +42,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Russo+One&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;500;700&display=swap');
 body {
   margin: 0;
   padding: 0;
@@ -58,7 +58,7 @@ body {
 }
 
 * {
-  font-family: "Russo One", sans-serif;
+  font-family: 'Ubuntu', sans-serif;
 }
 
 main {
@@ -69,7 +69,6 @@ main {
 
 h1 {
   font-size: 1.4rem;
-  font-weight: 200;
   text-transform: uppercase;
   width: 80%;
   padding: 10px 0;
@@ -85,7 +84,6 @@ h2 {
   position: relative;
   text-align: center;
   font-size: 1rem;
-  font-weight: 200;
   text-transform: uppercase;
   width: 60%;
   padding: 10px 0;

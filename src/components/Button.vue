@@ -13,7 +13,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .button {
   padding: 5px 10px;
   border-radius: 5px;
@@ -23,10 +23,12 @@ export default {
   background-color: unset;
   border: white 1px solid;
   color: white;
-  &:hover {
+  &:active {
     transform: scale(1.02);
     color: orange;
     border: orange 1px solid;
+  }
+  &:hover {
     text-decoration: underline;
   }
   &:disabled {

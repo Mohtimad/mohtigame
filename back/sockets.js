@@ -2,6 +2,7 @@ const localStorage = require('localStorage');
 const gameStat = require('./sockets/rules')
 const socketio = require('socket.io');
 const gameIo = require('./sockets/gameIo');
+const textChat = require('./sockets/chat')
 const party = require('./sockets/party');
 const maxRoom = 50
 const regexUsername = /^[a-zA-Z0-9.,'\-àáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð]{3,8}$/;
@@ -198,24 +199,15 @@ module.exports.listen = function (server) {
                 }
             });
 
-            const comments = [
-                "Bonjour",
-                "Bonne chance",
-                "Bien joué !",
-                "Pas d'bol..",
-                "Merci !",
-                "@%*!&$£",
-                "Haha !",
-                "Prenez !",
-                "Relancez !"
-            ]
 
             socket.on('chat', function (data) {
                 if (data.room > 0 &&
                     data.room <= maxRoom &&
                     regexUsername.test(data.username)) {
-                    if (data.value >= 0 && data.value < comments.length) {
-                        io.emit(`room_${data.room}`, data.username + ' : ' + comments[data.value]);
+                    const text = textChat.text
+                    console.log(text[data.value])
+                    if (data.value >= 0 && data.value < text.length) {
+                        io.emit(`room_${data.room}`, data.username + ' : ' + text[data.value]);
                     }
                 }
             })
