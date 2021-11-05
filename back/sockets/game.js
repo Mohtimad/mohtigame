@@ -73,7 +73,6 @@ const checkIfCanMakePoints = (partyData) => {
 }
 
 exports.turnInit = (partyData) => {
-
     if (partyData.isStart) {
         partyData.dices = rollDices(partyData.diceRemaining)
         // return to result : points and the dice remaining
@@ -92,4 +91,24 @@ exports.turnInit = (partyData) => {
 
     }
     return partyData
+}
+
+exports.nextTurn = (partyData) => {
+    let playerNextTurn = partyData.playerTurn
+    for (let i = 0; i <= partyData.playerNb; i++) {
+        if (playerNextTurn + 1 > partyData.playerNb) {
+            playerNextTurn = 0
+        }
+        if (partyData.playersID[playerNextTurn] === null ||
+            partyData.playersScore[playerNextTurn] >= partyData.maxScore
+        ) {
+            playerNextTurn++
+        } else {
+            return playerNextTurn
+        }
+    }
+}
+
+exports.randomTurn = (maxPlayer) => {
+    return (Math.floor(Math.random() * maxPlayer)) + 1
 }

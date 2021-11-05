@@ -187,20 +187,20 @@ export default {
         blue -2px 2px 5px;
     }
     &--green {
-      box-shadow: greenyellow 2px 2px 5px, greenyellow -2px -2px 5px, greenyellow 2px -2px 5px,
-        greenyellow -2px 2px 5px;
+      box-shadow: greenyellow 2px 2px 5px, greenyellow -2px -2px 5px,
+        greenyellow 2px -2px 5px, greenyellow -2px 2px 5px;
     }
     &--yellow {
-      box-shadow: yellow 2px 2px 5px, yellow -2px -2px 5px,
-        yellow 2px -2px 5px, yellow -2px 2px 5px;
+      box-shadow: yellow 2px 2px 5px, yellow -2px -2px 5px, yellow 2px -2px 5px,
+        yellow -2px 2px 5px;
     }
     &--orange {
-      box-shadow: orange 2px 2px 5px, orange -2px -2px 5px,
-        orange 2px -2px 5px, orange -2px 2px 5px;
+      box-shadow: orange 2px 2px 5px, orange -2px -2px 5px, orange 2px -2px 5px,
+        orange -2px 2px 5px;
     }
     &--purple {
-      box-shadow: purple 2px 2px 5px, purple -2px -2px 5px,
-        purple 2px -2px 5px, purple -2px 2px 5px;
+      box-shadow: purple 2px 2px 5px, purple -2px -2px 5px, purple 2px -2px 5px,
+        purple -2px 2px 5px;
     }
     &--red {
       box-shadow: red 2px 2px 5px, red -2px -2px 5px, red 2px -2px 5px,
@@ -209,7 +209,7 @@ export default {
   }
   @keyframes turnDices {
     0% {
-      transform: rotate(0turn);
+      //transform: rotate(0turn);
       background-color: white;
       opacity: 1;
     }
@@ -221,7 +221,7 @@ export default {
     }
     100% {
       background-color: black;
-      transform: rotate(15turn);
+      transform: rotate(3turn);
       opacity: 1;
     }
   }

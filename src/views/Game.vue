@@ -115,7 +115,7 @@ export default {
   data() {
     return {
       username: this.$store.state.username,
-      time: 0,
+      time: 15,
       animationDices: true,
       id: this.$route.params.id, //this is the id from the browser
       actualPlayer: -1,
@@ -139,6 +139,7 @@ export default {
         lose: false,
         win: false,
         timePerTurn: 0,
+        timeServer: 0,
       },
     };
   },
@@ -151,7 +152,9 @@ export default {
       username: this.username,
     });
     setInterval(() => {
-      this.updateTime();
+      if (this.partyData.isStart) {
+        this.time--;
+      }
     }, 1000);
   },
 
@@ -159,6 +162,7 @@ export default {
     this.socket.on(`game_${this.id}`, (partyData) => {
       this.partyData = { ...partyData };
       this.dicesShadowColor = this.getShadowDices(this.partyData);
+      this.updateTime();
       if (partyData.win) {
         this.actualPlayer = -1;
         this.canDisplayWin = false;
@@ -175,8 +179,9 @@ export default {
 
   methods: {
     updateTime: function () {
-      this.time =
-        this.partyData.timePerTurn - Math.floor(Date.now() / 1000) - 1;
+      if (this.partyData.isStart) {
+        this.time = this.partyData.timePerTurn - this.partyData.timeServer - 1;
+      }
     },
     sendMsg: function (value) {
       this.socket.emit(`chat`, { msg: value, room: this.id });

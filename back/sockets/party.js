@@ -1,5 +1,6 @@
 const localStorage = require('localStorage');
 const gameStat = require('./rules')
+const maxRoom = 50
 
 module.exports.initNewParty = (data) => {
     let partyData = localStorage.getItem(`game_${data.room}`)
@@ -12,5 +13,15 @@ module.exports.initNewParty = (data) => {
         newParty.playersID.length = newParty.playerNb
         newParty.playersScore.length = newParty.playerNb
         localStorage.setItem(`game_${data.room}`, JSON.stringify(newParty))
+    }
+}
+
+module.exports.roomIsValid = (room) => {
+    if (room > 0 &&
+        room <= maxRoom &&
+        !isNaN(parseInt(room, 10))) {
+        return true
+    } else {
+        return false
     }
 }
