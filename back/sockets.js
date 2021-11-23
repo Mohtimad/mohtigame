@@ -23,11 +23,7 @@ const usernameIsValid = (username) => {
 }
 
 module.exports.listen = function (server) {
-    const io = socketio(server, {
-        cors: {
-            origin: "*"
-        }
-    });
+    const io = socketio(server , {cors: { origin: "*"}});
 
     // timer loop
     setInterval(() => {
